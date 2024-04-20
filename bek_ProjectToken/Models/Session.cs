@@ -1,4 +1,4 @@
-﻿namespace apiv2.Models
+﻿namespace bek_ProjectToken.Models
 {
     public class Session
     {
