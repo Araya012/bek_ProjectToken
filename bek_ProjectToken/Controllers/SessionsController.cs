@@ -23,7 +23,7 @@ namespace bek_ProjectToken.Controllers
         {
             try
             {
-                // Busca la sesión en la base de datos
+                // Find the session in the database
                 var session = _context.bek_Session.FirstOrDefault(s => s.SessionId == sessionId);
 
                 if (session == null)
@@ -31,7 +31,7 @@ namespace bek_ProjectToken.Controllers
                     return NotFound("Session not found");
                 }
 
-                // Retorna la sesión encontrada
+                // Return the found session
                 return Ok(session);
             }
             catch (Exception ex)
@@ -45,23 +45,23 @@ namespace bek_ProjectToken.Controllers
         {
             try
             {
-                // Validar la autenticidad de la llave del cliente contra la tabla de clientes
+                // Validate the authenticity of the client key against the Clients table
                 var client = _context.bek_Client.FirstOrDefault(c => c.ClientKey == clientKey);
                 if (client == null)
                 {
                     return NotFound("Invalid client key");
                 }
 
-                // Generar una sesión usando un algoritmo personalizado para encriptar y desencriptar un texto
+                // Generate a session using a custom algorithm to encrypt and decrypt text
                 string sessionToken = GenerateSessionToken();
 
-                // Almacenar la sesión en la tabla de sesiones
+                // Store the session in the Sessions table
                 var session = new Session
                 {
                     ClientId = client.ClientId,
                     SessionToken = sessionToken,
                     CreationDate = DateTime.Now,
-                    ExpirationDate = DateTime.Now.AddDays(1) // Ejemplo: sesión válida por 1 día
+                    ExpirationDate = DateTime.Now.AddDays(1) // Example: session valid for 1 day
                 };
                 _context.bek_Session.Add(session);
                 _context.SaveChanges();
@@ -76,9 +76,9 @@ namespace bek_ProjectToken.Controllers
 
         private string GenerateSessionToken()
         {
-            // Aquí implementarías tu algoritmo personalizado para generar el token de sesión
-            // Por ejemplo, puedes usar clases como Random o algún algoritmo de cifrado
-            // En este ejemplo, simplemente genero un GUID como token de sesión
+            // Here you would implement your custom algorithm to generate the session token
+            // For example, you can use classes like Random or some encryption algorithm
+            // In this example, I'm simply generating a GUID as the session token
             return Guid.NewGuid().ToString();
         }
 
@@ -87,14 +87,14 @@ namespace bek_ProjectToken.Controllers
         {
             try
             {
-                // Validar la autenticidad de la sesión contra la tabla de sesiones
+                // Validate the authenticity of the session against the Sessions table
                 var session = _context.bek_Session.FirstOrDefault(s => s.SessionToken == sessionToken);
                 if (session == null || session.ExpirationDate < DateTime.Now)
                 {
                     return NotFound("Invalid session token or session expired");
                 }
 
-                // Crear el usuario
+                // Create the user
                 var user = new User
                 {
                     Name = name,
@@ -116,25 +116,23 @@ namespace bek_ProjectToken.Controllers
         {
             try
             {
-                // Recupera todos los usuarios de la tabla bek_User
+                // Retrieve all users from the bek_User table
                 var users = _context.bek_User.ToList();
 
                 if (users == null || users.Count == 0)
                 {
-                    // No se encontraron usuarios en la base de datos
+                    // No users found in the database
                     return NotFound("No users found");
                 }
 
-                // Retorna la lista de usuarios
+                // Return the list of users
                 return Ok(users);
             }
             catch (Exception ex)
             {
-                // Ocurrió un error al intentar recuperar los usuarios
+                // An error occurred while trying to retrieve the users
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
-
     }
 }
