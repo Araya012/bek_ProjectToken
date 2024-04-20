@@ -4,9 +4,12 @@ namespace bek_ProjectToken.Models
 {
     public class Client
     {
+        [Key]
         public int ClientId { get; set; }
-        public string? ClientKey { get; set; }
-        // Other fields related to the client, if necessary
+
+        [Required(ErrorMessage = "ClientKey is required")]
+        public string ClientKey { get; set; }
+
     }
 
 }
