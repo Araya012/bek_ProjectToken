@@ -1,10 +1,9 @@
-﻿// ClientController.cs
-
-using bek_ProjectToken.Models;
+﻿using bek_ProjectToken.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace bek_ProjectToken.Controllers
@@ -21,7 +20,13 @@ namespace bek_ProjectToken.Controllers
         }
 
         [HttpPost("CreateUser")]
-        public IActionResult CreateUser(string name, string email, string sessionToken)
+        public IActionResult CreateUser([Required(ErrorMessage = "Name is required")]
+                                          [RegularExpression(@"^[A-Za-z]+$", ErrorMessage = "Name can only contain letters")]
+                                          string name,
+                                          [Required(ErrorMessage = "Email is required")]
+                                          [EmailAddress(ErrorMessage = "Invalid email format")]
+                                          string email,
+                                          string sessionToken)
         {
             try
             {
@@ -34,6 +39,13 @@ namespace bek_ProjectToken.Controllers
                 if (session.ExpirationDate < DateTime.Now)
                 {
                     return BadRequest("Session token has expired");
+                }
+
+                // Verificar si el correo electrónico ya está en uso
+                var existingUser = _context.bek_User.FirstOrDefault(u => u.Email == email);
+                if (existingUser != null)
+                {
+                    return Conflict("Email already in use");
                 }
 
                 var user = new User

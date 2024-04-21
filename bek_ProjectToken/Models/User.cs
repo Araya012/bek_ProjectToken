@@ -7,14 +7,13 @@ namespace bek_ProjectToken.Models
         [Key]
         public int UserId { get; set; }
 
-        [Required(ErrorMessage = "Name is required")]
-        [RegularExpression(@"^[^\d]+$", ErrorMessage = "Name cannot contain numbers")]
+        [Required(ErrorMessage = "The name field is required")]
+        [MaxLength(50, ErrorMessage = "The name field cannot exceed 50 characters")]
+        [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$", ErrorMessage = "Only letters, accents, and spaces are allowed")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
+        [Required(ErrorMessage = "The email field is required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; }
-
     }
 }
-
