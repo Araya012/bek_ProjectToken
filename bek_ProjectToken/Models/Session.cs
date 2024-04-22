@@ -4,6 +4,7 @@ namespace bek_ProjectToken.Models
     public class Session
     {
         [Key]
+        // Primary Key
         public int SessionId { get; set; }
 
         [Required(ErrorMessage = "ClientId is required")]

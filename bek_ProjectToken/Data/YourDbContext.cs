@@ -16,8 +16,8 @@ namespace bek_ProjectToken.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Aquí puedes realizar configuraciones adicionales de tu modelo si es necesario
-            // Por ejemplo, establecer claves primarias, relaciones, índices, etc.
+            //Here you can make additional configurations of your model if necessary
+            //For example, establishing primary keys, relationships, indexes, etc.
         }
     }
 }

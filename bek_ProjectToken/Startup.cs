@@ -16,32 +16,32 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        // Configuración de DbContext
+        // DbContext configuration
         services.AddDbContext<YourDbContext>(options =>
         //  options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
         options.UseMySql(Configuration.GetConnectionString("DefaultConnection"),
-              new MySqlServerVersion(new Version(7, 0, 0)))); // Especifica la versión del servidor MySQL que estás utilizando
+              new MySqlServerVersion(new Version(7, 0, 0)))); // Here you specify the version of the MySQL server you are using
 
-        // Otros servicios
+        // Other services
         services.AddControllers();
-        // Otros servicios que necesites agregar
+        // Other services you need to add
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        // Configuración de la aplicación
+        // application configuration
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
         else
         {
-            // Configuración de errores en producción
+            // Error configuration in production
             app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
 
-        // Middleware y enrutamiento
+        // Middleware and routing
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
