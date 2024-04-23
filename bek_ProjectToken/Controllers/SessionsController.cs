@@ -11,16 +11,22 @@ namespace bek_ProjectToken.Controllers
     [ApiController]
     public class SessionsController : ControllerBase
     {
+        //The _context field is set to access the database context.
         private readonly YourDbContext _context;
-        //Active session time
+
+        //A constant SessionExpirationMinutes is also defined that determines the duration of the session in minutes.
         private const int SessionExpirationMinutes = 1;
 
+        //Finally, a constructor is defined that accepts a parameter of type YourDbContext and assigns it to the _context field.
         public SessionsController(YourDbContext context)
         {
             _context = context;
         }
 
         //HTTP GET Request
+        /*This GetSession method is invoked when a GET request is received on the path "/api/sessions/{sessionId}". 
+         * Searches the database for the session corresponding to the given ID. If the session is not found, it returns a 404 (Not Found) status code with a descriptive message.
+         * If found, it returns a 200 (OK) status code along with the session data.*/
         [HttpGet("{sessionId}")]
         public IActionResult GetSession(int sessionId)
         {
@@ -44,11 +50,14 @@ namespace bek_ProjectToken.Controllers
         }
 
         //Request to create a new HTTP POST client session
+        /*Takes a clientKey parameter, which is expected to be provided in the body of the POST request. 
+        * This parameter represents the client key that will be used to identify the client in the system.*/
         [HttpPost]
         public IActionResult CreateClientSession(string clientKey)
         {
             try
             {
+                //In this block of code, the database is searched for a customer that matches the key provided
                 var client = _context.bek_Client.FirstOrDefault(c => c.ClientKey == clientKey);
                 
                 //If client is not found, it returns error 404
@@ -57,6 +66,7 @@ namespace bek_ProjectToken.Controllers
                     return NotFound("Invalid client key");
                 }
 
+                //In this block of code, the database is searched for an existing session associated with the previously found client.
                 Session session = _context.bek_Session.FirstOrDefault(s => s.ClientId == client.ClientId);
                 if (session != null)
                 {
